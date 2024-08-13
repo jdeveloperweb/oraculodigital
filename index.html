@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oráculo Digital</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@100..800&family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap');
+        body {
+            font-family: 'Anek Devanagari', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1c1c2e, #4b79a1, #283e51);
+            color: #fff;
+        }
+        h1 {
+            margin-top: 5px;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .mago-icone {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin-bottom: 0px;
+        }
+        input, button {
+            font-family: 'Anek Devanagari', sans-serif;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+        input {
+            width: 80%;
+            max-width: 400px;
+        }
+        button {
+            background-color: #283e51;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #4b79a1;
+        }
+        .pergunta-pronta {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #283e65;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .pergunta-pronta:hover {
+            background-color: #4b79a1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #282c34;
+            color: #fff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: magicEffect .5s ease-in-out;
+        }
+        @keyframes magicEffect {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            padding: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #modalText {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 62px;
+            font-weight: bold;
+        }
+
+        /* Boas-Vindas Modal Styles */
+        .welcome-modal-content {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+            max-width: 600px;
+        }
+        .welcome-modal-content h2 {
+            font-family: 'Chakra Petch', sans-serif;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .welcome-modal-content p {
+            font-family: 'Anek Devanagari', sans-serif;
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .welcome-modal-content ul {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 15px;
+        }
+        .welcome-modal-content ul li {
+            font-family: 'Anek Devanagari', sans-serif;
+            font-size: 16px;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .welcome-modal-content ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #4b79a1;
+            font-size: 20px;
+        }
+        .welcome-modal-content .close-welcome {
+            display: block;
+            margin: 0 auto;
+            margin-top: 20px;
+            background-color: #4b79a1;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .welcome-modal-content .close-welcome:hover {
+            background-color: #1c1c2e;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="bruxo.png" alt="Mago Enigmático" class="mago-icone">
+        <h1>Oráculo Digital</h1>
+        <input type="text" id="pergunta" placeholder="Digite sua pergunta">
+        <button onclick="responder()">Perguntar</button>
+        <div>
+            <h3>Clique em uma pergunta pronta:</h3>
+            <div class="pergunta-pronta" onclick="responderComPergunta('Devo seguir meu instinto?')">Devo seguir meu instinto?</div>
+            <div class="pergunta-pronta" onclick="responderComPergunta('Hoje terei sorte?')">Hoje terei sorte?</div>
+            <div class="pergunta-pronta" onclick="responderComPergunta('Devo arriscar?')">Devo arriscar?</div>
+            <div class="pergunta-pronta" onclick="responderComPergunta('Conseguirei atingir meu objetivo?')">Conseguirei atingir meu objetivo?</div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p id="modalText"></p>
+        </div>
+    </div>
+
+    <!-- Welcome Modal -->
+    <div id="welcomeModal" class="modal">
+        <div class="welcome-modal-content">
+            <h2>Bem-vindo ao Oráculo Digital!</h2>
+			<p>No fundo, quem sabe? Talvez o mundo ao nosso redor também seja movido por uma série de eventos aleatórios, onde cada ação e reação são meros caprichos do acaso.</p>
+            <p>Mas aqui, neste jogo, essa ideia se torna realidade. Suas perguntas podem ser respondidas pelo acaso, pela aleatoriedade que a vida nos apresenta. Aproveite o momento, e lembre-se, o verdadeiro poder de decisão está sempre com você!</p>
+            <p>Prepare-se para embarcar em um jogo onde as respostas podem parecer simples, mas revelam algo mais profundo. Aqui está como funciona:</p>
+            <ul>
+                <li>Digite uma pergunta ou escolha uma das perguntas prontas.</li>
+                <li>Clique em "Perguntar" e o oráculo lhe dará uma resposta aleatória.</li>
+                <li>Lembre-se, as respostas são completamente aleatórias e não devem ser levadas a sério.</li>
+            </ul>
+         
+            <div class="close-welcome" onclick="closeWelcomeModal()">Começar</div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <div style="position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 10px; color: white; background-color: rgba(0, 0, 0, 0.5); padding: 5px;">
+        Este é apenas um jogo de entretenimento. As respostas fornecidas são geradas aleatoriamente e não têm qualquer relação com a pergunta feita. As respostas não devem ser interpretadas como conselhos ou orientações de qualquer tipo. Lembre-se de que todas as decisões da vida real devem ser tomadas com base em informações precisas e refletidas, e não neste jogo.
+    </div>
+
+    <script>
+        function responder() {
+            const pergunta = document.getElementById('pergunta').value;
+            mostrarResposta(pergunta);
+        }
+
+        function responderComPergunta(pergunta) {
+            mostrarResposta(pergunta);
+        }
+
+        function mostrarResposta(pergunta) {
+            if (pergunta.trim() === "") {
+                abrirModal("Por favor, faça uma pergunta!", 'gray');
+                return;
+            }
+            const respostas = ["Sim", "Não"];
+            const indice = Math.floor(Math.random() * respostas.length);
+            const resposta = `${respostas[indice]}`;
+            const cor = resposta === "Sim" ? "green" : "red";
+            abrirModal(resposta, cor);
+        }
+
+        function abrirModal(texto, cor) {
+            const modalText = document.getElementById('modalText');
+            modalText.innerText = texto;
+            modalText.style.color = cor;
+            const modal = document.getElementById("myModal");
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+        function closeWelcomeModal() {
+            const welcomeModal = document.getElementById("welcomeModal");
+            welcomeModal.style.display = "none";
+        }
+
+        // Fechar modal ao clicar fora da área de conteúdo
+        window.onclick = function(event) {
+            const modal = document.getElementById("myModal");
+            const welcomeModal = document.getElementById("welcomeModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+            if (event.target == welcomeModal) {
+                welcomeModal.style.display = "none";
+            }
+        }
+
+        // Mostrar modal de boas-vindas ao carregar a página
+        window.onload = function() {
+            const welcomeModal = document.getElementById("welcomeModal");
+            welcomeModal.style.display = "flex";
+        }
+    </script>
+</body>
+</html>
